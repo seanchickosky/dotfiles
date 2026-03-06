@@ -36,11 +36,6 @@ ensure "fzf-tab" "test -d \$HOME/fzf-tab" \
 ensure "direnv" "command -v direnv" \
   'curl -sfL https://direnv.net/install.sh | bash'
 
-if command -v npm &>/dev/null; then
-  ensure "claude-code" "command -v claude" \
-    'npm install -g @anthropic-ai/claude-code'
-fi
-
 # Stamp so .zshrc.workspace doesn't re-run on every shell
 touch "$DOTFILES_DIR/.bootstrapped"
 
