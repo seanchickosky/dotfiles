@@ -21,17 +21,36 @@ for f in .zshrc; do
   fi
 done
 
-# Symlink .claude hooks and settings (merge into existing .claude dir)
+# Configure Claude Code (merge into existing settings, symlink hooks)
 if [[ -d "$DOTFILES_DIR/.claude" ]]; then
   mkdir -p "$HOME/.claude"
-  for item in hooks settings.json; do
-    src="$DOTFILES_DIR/.claude/$item"
-    dst="$HOME/.claude/$item"
-    if [[ -e "$src" ]] && [[ ! -L "$dst" || "$(readlink "$dst")" != "$src" ]]; then
-      echo "[dotfiles] Linking .claude/$item -> $src"
-      ln -sf "$src" "$dst"
+
+  # Symlink hooks directory
+  src="$DOTFILES_DIR/.claude/hooks"
+  dst="$HOME/.claude/hooks"
+  if [[ -d "$src" ]] && [[ ! -L "$dst" || "$(readlink "$dst")" != "$src" ]]; then
+    echo "[dotfiles] Linking .claude/hooks -> $src"
+    ln -sf "$src" "$dst"
+  fi
+
+  # Merge settings.json (preserves existing keys like auth)
+  src="$DOTFILES_DIR/.claude/settings.json"
+  dst="$HOME/.claude/settings.json"
+  if [[ -f "$src" ]]; then
+    if command -v jq &>/dev/null; then
+      if [[ -f "$dst" ]] && [[ ! -L "$dst" ]]; then
+        echo "[dotfiles] Merging dotfiles claude settings into $dst"
+        jq -s '.[0] * .[1]' "$dst" "$src" > "$dst.tmp" && mv "$dst.tmp" "$dst"
+      else
+        # No existing file (or it's a stale symlink) — copy directly
+        rm -f "$dst"
+        echo "[dotfiles] Writing claude settings to $dst"
+        cp "$src" "$dst"
+      fi
+    else
+      echo "[dotfiles] Warning: jq not found, skipping claude settings merge"
     fi
-  done
+  fi
 fi
 
 ensure "oh-my-zsh" "test -d \$HOME/.oh-my-zsh" \
