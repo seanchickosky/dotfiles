@@ -27,7 +27,7 @@ ensure "oh-my-zsh" "test -d \$HOME/.oh-my-zsh" \
 ensure "starship" "command -v starship" \
   'curl -sS https://starship.rs/install.sh | sh -s -- -y'
 
-ensure "fzf" "command -v fzf" \
+ensure "fzf" "test -d \$HOME/.fzf" \
   'git -c url."https://github.com/".insteadOf="" clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all --no-bash --no-fish'
 
 ensure "fzf-tab" "test -d \$HOME/fzf-tab" \
