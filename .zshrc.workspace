@@ -1,28 +1,8 @@
-# Bootstrap packages if missing (idempotent, only runs install on first shell)
-_ws_ensure() {
-  local name="$1" check="$2" install="$3"
-  if ! eval "$check" &>/dev/null; then
-    echo "[dotfiles] Installing $name..."
-    eval "$install"
-  fi
-}
-
-_ws_ensure "oh-my-zsh" "test -d \$HOME/.oh-my-zsh" \
-  'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc'
-
-_ws_ensure "starship" "command -v starship" \
-  'curl -sS https://starship.rs/install.sh | sh -s -- -y'
-
-_ws_ensure "fzf" "command -v fzf" \
-  'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all --no-bash --no-fish'
-
-_ws_ensure "fzf-tab" "test -d \$HOME/fzf-tab" \
-  'git clone https://github.com/Aloxaf/fzf-tab ~/fzf-tab'
-
-_ws_ensure "direnv" "command -v direnv" \
-  'curl -sfL https://direnv.net/install.sh | bash'
-
-unfunction _ws_ensure
+# Bootstrap packages on first shell
+if [[ ! -f "$HOME/.dotfiles/.bootstrapped" ]]; then
+  "$HOME/.dotfiles/install.sh"
+  touch "$HOME/.dotfiles/.bootstrapped"
+fi
 
 # oh-my-zsh (sets up completion, themes — must load before shared config)
 export ZSH="$HOME/.oh-my-zsh"
