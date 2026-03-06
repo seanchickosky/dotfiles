@@ -1,4 +1,5 @@
-DOTFILES_DIR="${0:A:h}"
+DOTFILES_DIR="${HOME}/.zshrc"
+DOTFILES_DIR="${DOTFILES_DIR:A:h}"
 
 autoload -Uz compinit; compinit
 

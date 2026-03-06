@@ -21,6 +21,19 @@ for f in .zshrc; do
   fi
 done
 
+# Symlink .claude hooks and settings (merge into existing .claude dir)
+if [[ -d "$DOTFILES_DIR/.claude" ]]; then
+  mkdir -p "$HOME/.claude"
+  for item in hooks settings.json; do
+    src="$DOTFILES_DIR/.claude/$item"
+    dst="$HOME/.claude/$item"
+    if [[ -e "$src" ]] && [[ ! -L "$dst" || "$(readlink "$dst")" != "$src" ]]; then
+      echo "[dotfiles] Linking .claude/$item -> $src"
+      ln -sf "$src" "$dst"
+    fi
+  done
+fi
+
 ensure "oh-my-zsh" "test -d \$HOME/.oh-my-zsh" \
   'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc'
 
