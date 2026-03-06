@@ -1,0 +1,62 @@
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export HOMEBREW_NO_INSECURE_REDIRECT=1
+export HOMEBREW_CASK_OPTS=--require-sha
+export HOMEBREW_DIR=/opt/homebrew
+export HOMEBREW_BIN=/opt/homebrew/bin
+
+# Language version managers
+eval "$(pyenv init -)"
+eval "$(rbenv init -)"
+
+# GNU coreutils over macOS defaults
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+
+# Datadog devtools
+export PATH="$HOME/dd/devtools/bin:$PATH"
+
+# Tell the devenv vm to mount $GOPATH/src rather than just dd-go
+export MOUNT_ALL_GO_SRC=1
+
+# AWS
+export AWS_VAULT_KEYCHAIN_NAME=login
+export AWS_SESSION_TTL=24h
+export AWS_ASSUME_ROLE_TTL=1h
+
+# Helm
+export HELM_DRIVER=configmap
+
+# SCFW
+alias npm="scfw run npm"
+alias pip="scfw run pip"
+alias poetry="scfw run poetry"
+export SCFW_DD_AGENT_LOG_PORT="10365"
+export SCFW_DD_LOG_LEVEL="ALLOW"
+export SCFW_HOME="$HOME/.scfw"
+
+# Git signing
+eval "$(dd-gitsign load-key)"
+
+# Dev shortcuts
+export MCP_DEBUGGER_BAZEL="//domains/ide-integration/apps/apis/live-debugger-mcp/..."
+export MCP_DEBUGGER_GAZELLE="domains/ide-integration/apps/apis/live-debugger-mcp"
+
+# git-dd completion
+autoload -Uz _git_dd
+
+# Workspace SSH (iTerm2 + autossh)
+ws() {
+  osascript - "$1" << 'SCRIPT'
+on run argv
+  set wsName to item 1 of argv
+  tell application "iTerm2"
+    create window with default profile command ¬
+        "autossh -M 0 -t workspace-" & wsName & " \"tmux new-session -A -s main\""
+  end tell
+end run
+SCRIPT
+}
+_ws() {
+  compadd $(workspaces list 2>/dev/null | awk 'NR>1 && /^[a-zA-Z]/{print $1}')
+}
+compdef _ws ws
