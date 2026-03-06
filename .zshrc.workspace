@@ -7,5 +7,10 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 [[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
+# Keep claude-code up to date (npm available in shell but not during provisioning)
+if command -v npm &>/dev/null; then
+  npm update -g @anthropic-ai/claude-code &>/dev/null &
+fi
+
 # Claude with auto-accept but restricted network/git tools
 alias claude='claude --dangerously-skip-permissions --disallowedTools "Bash(git:*) Bash(curl:*) Bash(wget:*)"'
