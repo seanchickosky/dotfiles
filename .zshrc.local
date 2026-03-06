@@ -44,15 +44,6 @@ export MCP_DEBUGGER_GAZELLE="domains/ide-integration/apps/apis/live-debugger-mcp
 # git-dd completion
 autoload -Uz _git_dd
 
-# Workspace creation
-wsc() {
-  local name="$1"; shift
-  workspaces create "$name" \
-    --region us-east-1 \
-    --dotfiles https://github.com/seanchickosky/dotfiles \
-    "$@"
-}
-
 # Workspace SSH (iTerm2 + autossh)
 ws() {
   osascript - "$1" << 'SCRIPT'
@@ -60,12 +51,14 @@ on run argv
   set wsName to item 1 of argv
   tell application "iTerm2"
     create window with default profile command ¬
-        "autossh -M 0 -t workspace-" & wsName & " \"tmux new-session -A -s main\""
+        "/opt/homebrew/bin/autossh -M 0 -t workspace-" & wsName & " \"tmux -CC new-session -A -s main\""
   end tell
 end run
 SCRIPT
 }
 _ws() {
-  compadd $(workspaces list 2>/dev/null | awk 'NR>1 && /^[a-zA-Z]/{print $1}')
+  local -a descs
+  descs=(${(f)"$(workspaces list 2>/dev/null | awk 'NR>1 && /^[a-zA-Z]/{printf "%s:%s %s %s\n", $1, $2, $3, $4}')"})
+  _describe 'workspace' descs
 }
 compdef _ws ws

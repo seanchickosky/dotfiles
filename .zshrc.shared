@@ -13,10 +13,7 @@ export GOPROXY="https://depot-read-api-go.us1.ddbuild.io/magicmirror/magicmirror
 # Path
 export PATH="$HOME/.local/bin:$PATH"
 
-# Shell setup
-autoload -Uz compinit; compinit
-
-# Tools (conditional — installed on workspace via bootstrap, on macOS via brew)
+# Tools (compinit already ran in .zshrc) (conditional — installed on workspace via bootstrap, on macOS via brew)
 command -v starship &>/dev/null && eval "$(starship init zsh)"
 command -v fzf &>/dev/null && source <(fzf --zsh)
 [[ -f ~/fzf-tab/fzf-tab.plugin.zsh ]] && source ~/fzf-tab/fzf-tab.plugin.zsh

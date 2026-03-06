@@ -1,7 +1,6 @@
-# Bootstrap packages on first shell
-if [[ ! -f "$HOME/.dotfiles/.bootstrapped" ]]; then
-  "$HOME/.dotfiles/install.sh"
-  touch "$HOME/.dotfiles/.bootstrapped"
+# Bootstrap packages on first shell (DOTFILES_DIR set by .zshrc)
+if [[ ! -f "$DOTFILES_DIR/.bootstrapped" ]]; then
+  "$DOTFILES_DIR/install.sh"
 fi
 
 # oh-my-zsh (sets up completion, themes — must load before shared config)
