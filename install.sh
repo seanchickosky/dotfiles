@@ -68,9 +68,6 @@ ensure "fzf-tab" "test -d \$HOME/fzf-tab" \
 ensure "direnv" "command -v direnv" \
   'curl -sfL https://direnv.net/install.sh | bash'
 
-ensure "rust" "command -v cargo" \
-  'curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source "$HOME/.cargo/env"'
-
 NODE_VERSION="22.12.0"
 ensure "node" "command -v node" \
   'mkdir -p "$HOME/.local" && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" | tar -xJ -C "$HOME/.local" --strip-components=1'

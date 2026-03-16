@@ -79,8 +79,8 @@ ws-claudeville() {
   (cd "$src" && cargo build --release --target "$target") || return 1
 
   echo "[claudeville] Deploying to workspace-${ws}..."
-  ssh "workspace-${ws}" 'mkdir -p ~/.cargo/bin'
-  scp "$bin" "workspace-${ws}:~/.cargo/bin/claudeville"
+  ssh "workspace-${ws}" 'mkdir -p ~/.local/bin'
+  scp "$bin" "workspace-${ws}:~/.local/bin/claudeville"
   echo "[claudeville] Done"
 }
 compdef _ws ws-claudeville
