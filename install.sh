@@ -2,6 +2,8 @@
 # Bootstrap packages for workspace environments. Idempotent — safe to re-run.
 set -euo pipefail
 
+export PATH="$HOME/.local/bin:$PATH"
+
 ensure() {
   local name="$1" check="$2" install="$3"
   if ! eval "$check" &>/dev/null; then

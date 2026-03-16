@@ -71,9 +71,11 @@ ws-claudeville() {
   local ws="$1"
   [[ -z "$ws" ]] && { echo "usage: ws-claudeville <workspace-name>"; return 1; }
 
-  local target="x86_64-unknown-linux-gnu"
+  local target="x86_64-unknown-linux-musl"
   local src="$HOME/Claudeville"
   local bin="$src/target/${target}/release/claudeville"
+
+  rustup target list --installed | grep -q "$target" || rustup target add "$target"
 
   echo "[claudeville] Building for ${target}..."
   (cd "$src" && cargo build --release --target "$target") || return 1
