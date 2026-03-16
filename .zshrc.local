@@ -65,3 +65,22 @@ _ws() {
   _describe 'workspace' descs
 }
 compdef _ws ws
+
+# Deploy claudeville binary to a workspace (cross-compiled from local source)
+ws-claudeville() {
+  local ws="$1"
+  [[ -z "$ws" ]] && { echo "usage: ws-claudeville <workspace-name>"; return 1; }
+
+  local target="x86_64-unknown-linux-gnu"
+  local src="$HOME/Claudeville"
+  local bin="$src/target/${target}/release/claudeville"
+
+  echo "[claudeville] Building for ${target}..."
+  (cd "$src" && cargo build --release --target "$target") || return 1
+
+  echo "[claudeville] Deploying to workspace-${ws}..."
+  ssh "workspace-${ws}" 'mkdir -p ~/.cargo/bin'
+  scp "$bin" "workspace-${ws}:~/.cargo/bin/claudeville"
+  echo "[claudeville] Done"
+}
+compdef _ws ws-claudeville

@@ -68,6 +68,40 @@ ensure "fzf-tab" "test -d \$HOME/fzf-tab" \
 ensure "direnv" "command -v direnv" \
   'curl -sfL https://direnv.net/install.sh | bash'
 
+ensure "rust" "command -v cargo" \
+  'curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source "$HOME/.cargo/env"'
+
+NODE_VERSION="22.12.0"
+ensure "node" "command -v node" \
+  'mkdir -p "$HOME/.local" && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" | tar -xJ -C "$HOME/.local" --strip-components=1'
+
+ensure "graphite" "command -v gt" \
+  'npm install -g @withgraphite/graphite-cli && echo "[dotfiles] Run: gt auth --token <token> (get token from https://app.graphite.com/activate)"'
+
+# Graphite user config
+if command -v gt &>/dev/null; then
+  gt user branch-prefix --set seanchickosky/ 2>/dev/null
+
+  cfg="$HOME/.graphite_user_config"
+  # Seed auth token from workspaces secrets if available
+  secrets_dir="/run/user/$(id -u)/secrets"
+  if [[ -f "$secrets_dir/GRAPHITE_TOKEN" ]] && ! grep -q authToken "$cfg" 2>/dev/null; then
+    token=$(cat "$secrets_dir/GRAPHITE_TOKEN")
+    gt auth --token "$token" 2>/dev/null
+  fi
+
+  # Set PR metadata in CLI (no gt command for this, write directly)
+  if [[ -f "$cfg" ]]; then
+    jq '.submitViaCli = true' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+  else
+    echo '{"submitViaCli":true}' > "$cfg"
+  fi
+fi
+
+# Git rerere: remember conflict resolutions and auto-apply them
+git config --global rerere.enabled true
+git config --global rerere.autoUpdate true
+
 # Stamp so .zshrc.workspace doesn't re-run on every shell
 touch "$DOTFILES_DIR/.bootstrapped"
 
