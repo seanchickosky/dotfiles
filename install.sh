@@ -16,7 +16,7 @@ ensure() {
 
 # Symlink dotfiles into $HOME
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-for f in .zshrc; do
+for f in .zshrc .tmux.conf; do
   if [[ ! -L "$HOME/$f" || "$(readlink "$HOME/$f")" != "$DOTFILES_DIR/$f" ]]; then
     echo "[dotfiles] Linking $f -> $DOTFILES_DIR/$f"
     ln -sf "$DOTFILES_DIR/$f" "$HOME/$f"

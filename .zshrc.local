@@ -86,3 +86,12 @@ ws-claudeville() {
   echo "[claudeville] Done"
 }
 compdef _ws ws-claudeville
+
+# Copy files to a workspace
+ws-cp() {
+  local ws="${@[-1]}"
+  local files=("${@[1,-2]}")
+  [[ ${#files} -eq 0 || -z "$ws" ]] && { echo "usage: ws-cp <file>... <workspace-name>"; return 1; }
+  scp -r "${files[@]}" "workspace-${ws}:~/"
+}
+compdef '_arguments "*:file:_files" "(-):workspace:_ws"' ws-cp
