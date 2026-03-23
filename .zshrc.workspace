@@ -11,4 +11,4 @@ export ZSH="$HOME/.oh-my-zsh"
 command -v claude &>/dev/null && claude update &>/dev/null &
 
 # Claude with auto-accept but restricted destructive git operations
-alias claude='claude --dangerously-skip-permissions --disallowedTools "Bash(git push*) Bash(git rebase*) Bash(git reset --hard*) Bash(git force-push*) Bash(git push --force*) Bash(git push -f*) Bash(git commit --amend*) Bash(git filter-branch*) Bash(git reflog expire*) Bash(gt submit*) Bash(gt stack submit*) Bash(gt downstack submit*) Bash(gt upstack submit*)"'
+alias claude='claude --dangerously-skip-permissions --remote-control --disallowedTools "Bash(git push*) Bash(git rebase*) Bash(git reset --hard*) Bash(git force-push*) Bash(git push --force*) Bash(git push -f*) Bash(git commit --amend*) Bash(git filter-branch*) Bash(git reflog expire*) Bash(gt submit*) Bash(gt stack submit*) Bash(gt downstack submit*) Bash(gt upstack submit*)"'

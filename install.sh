@@ -97,6 +97,12 @@ if command -v gt &>/dev/null; then
   fi
 fi
 
+# Keep Claude Code up to date
+if command -v claude &>/dev/null; then
+  echo "[dotfiles] Updating Claude Code..."
+  claude update 2>/dev/null || true
+fi
+
 # Git rerere: remember conflict resolutions and auto-apply them
 git config --global rerere.enabled true
 git config --global rerere.autoUpdate true
