@@ -77,6 +77,9 @@ ensure "node" "command -v node" \
 ensure "graphite" "command -v gt" \
   'npm install -g @withgraphite/graphite-cli && echo "[dotfiles] Run: gt auth --token <token> (get token from https://app.graphite.com/activate)"'
 
+ensure "codex" "command -v codex" \
+  'npm install -g @openai/codex && echo "[dotfiles] Run: codex login (authenticate with Datadog email via SSO — do NOT use Google sign-in)"'
+
 # Graphite user config
 if command -v gt &>/dev/null; then
   gt user branch-prefix --set seanchickosky/ 2>/dev/null
@@ -95,6 +98,12 @@ if command -v gt &>/dev/null; then
   else
     echo '{"submitViaCli":true}' > "$cfg"
   fi
+fi
+
+# Codex MCP servers (Datadog staging)
+if command -v codex &>/dev/null; then
+  codex mcp add --url https://mcp.datad0g.com/api/unstable/live-debugger-mcp/mcp live-debugger-mcp 2>/dev/null || true
+  codex mcp add --url https://mcp.datad0g.com/api/unstable/mcp-server/mcp datadog-mcp 2>/dev/null || true
 fi
 
 # Keep Claude Code up to date

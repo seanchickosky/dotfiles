@@ -44,6 +44,8 @@ export MCP_DEBUGGER_GAZELLE="domains/ide-integration/apps/apis/live-debugger-mcp
 # git-dd completion
 autoload -Uz _git_dd
 
+export AUTOSSH_POLL=10
+
 # Workspace SSH (iTerm2 + autossh)
 ws() {
   osascript - "$1" << 'SCRIPT'
